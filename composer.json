@@ -1,0 +1,28 @@
+{
+    "name": "fbf/laravel-testimonials",
+    "description": "A Laravel 4 package for adding testimonials to a website",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Neil Crookes",
+            "email": "neil.crookes@fivebyfiveuk.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.*",
+        "cviebrock/eloquent-sluggable": "1.0.*",
+        "judev/php-htmltruncator": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "src/controllers",
+            "src/migrations",
+            "src/models"
+        ],
+        "psr-0": {
+            "Fbf\\LaravelTestimonials\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
