@@ -8,6 +8,27 @@ return array(
 	'uri' => 'testimonials',
 
 	/**
+	 * Page title of the testimonials index page
+	 *
+	 * @type string
+	 */
+	'index_page_title' => 'My testimonials index page',
+
+	/**
+	 * Meta description of the testimonials index page
+	 *
+	 * @type string
+	 */
+	'index_page_meta_description' => 'This is the description for my testimonials index page',
+
+	/**
+	 * Meta keywords of the testimonials index page
+	 *
+	 * @type string
+	 */
+	'index_page_meta_keywords' => 'These are the keywords for my testimonials index page',
+
+	/**
 	 * The view to use for the testimonials index page. You can change this to a view in your
 	 * app, and inside your own view you can @include the various elements in the package
 	 * or you can use this one provided, but there's no layout or anything.
@@ -55,5 +76,6 @@ return array(
 	 * The max height of the main images. The resized version of main images will fit within this size
 	 */
 	'main_image_max_height' => 450,
+
 
 );
