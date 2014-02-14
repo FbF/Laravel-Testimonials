@@ -10,6 +10,20 @@
 				</a>
 			</h2>
 
+			@if (!empty($testimonial->you_tube_video_id))
+				<div class="testimonial--youtube-thumb">
+					<a href="{{ $testimonial->getUrl() }}" title="{{ $testimonial->title }}">
+						{{ $testimonial->getYouTubeThumbnailImage() }}
+					</a>
+				</div>
+			@elseif (!empty($testimonial->image))
+				<div class="testimonial--image-thumb">
+					<a href="{{ $testimonial->getUrl() }}" title="{{ $testimonial->title }}">
+						{{ $testimonial->getImage('thumbnail') }}
+					</a>
+				</div>
+			@endif
+
 			<div class="testimonial-desc-snippet">
 				{{ HtmlTruncator\Truncator::truncate($testimonial->content, 30) }}
 			</div>
@@ -21,6 +35,8 @@
 		</div>
 
 	@endforeach
+
+	{{ $testimonials->links() }}
 
 @else
 

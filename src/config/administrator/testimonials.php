@@ -57,29 +57,38 @@ return array(
 			'title' => 'Title',
 			'type' => 'text',
 		),
-		'main_image' => array(
-			'title' => 'Main Image',
+		'image' => array(
+			'title' => 'Image',
 			'type' => 'image',
 			'naming' => 'random',
-			'location' => public_path() . Config::get('laravel-testimonials::main_image_originals_dir'),
+			'location' => public_path() . Config::get('laravel-testimonials::image.original.dir'),
 			'size_limit' => 5,
 			'sizes' => array(
 				array(
-					Config::get('laravel-testimonials::main_image_max_width'),
-					Config::get('laravel-testimonials::main_image_max_height'),
+					Config::get('laravel-testimonials::image.sizes.resized.width'),
+					Config::get('laravel-testimonials::image.sizes.resized.height'),
 					'auto',
-					public_path() . Config::get('laravel-testimonials::main_image_resized_dir'),
+					public_path() . Config::get('laravel-testimonials::image.sizes.resized.dir'),
+					100
+				),
+				array(
+					Config::get('laravel-testimonials::image.sizes.thumbnail.width'),
+					Config::get('laravel-testimonials::image.sizes.thumbnail.height'),
+					'crop',
+					public_path() . Config::get('laravel-testimonials::image.sizes.thumbnail.dir'),
 					100
 				),
 			),
+			'visible' => Config::get('laravel-testimonials::image.show'),
 		),
-		'main_image_alt' => array(
-			'title' => 'Main Image ALT text',
+		'image_alt' => array(
+			'title' => 'Image ALT text',
 			'type' => 'text',
 		),
 		'you_tube_video_id' => array(
 			'title' => 'YouTube Video ID (Takes precedence over the main image if it\'s populated)',
 			'type' => 'text',
+			'visible' => Config::get('laravel-testimonials::you_tube.show'),
 		),
 		'content' => array(
 			'title' => 'Content',
@@ -179,8 +188,8 @@ return array(
 	 */
 	'rules' => array(
 		'title' => 'required|max:255',
-		'main_image' => 'max:255',
-		'main_image_alt' => 'max:255',
+		'image' => 'max:255',
+		'image_alt' => 'max:255',
 		'you_tube_video_id' => 'max:255',
 		'status' => 'required|in:'.Fbf\LaravelTestimonials\Testimonial::DRAFT.','.Fbf\LaravelTestimonials\Testimonial::APPROVED,
 		'published_date' => 'required|date_format:"Y-m-d H:i:s"|date',

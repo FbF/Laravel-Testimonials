@@ -16,11 +16,11 @@ class CreateTestimonialsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('title');
-			$table->string('main_image');
-			$table->string('main_image_alt');
-			$table->string('main_image_width');
-			$table->string('main_image_height');
-			$table->string('you_tube_video_id');
+			$table->string('image')->nullable()->default(null);
+			$table->string('image_alt')->nullable()->default(null);
+			$table->string('image_width')->nullable()->default(null);
+			$table->string('image_height')->nullable()->default(null);
+			$table->string('you_tube_video_id')->nullable()->default(null);
 			$table->text('content');
 			$table->string('source');
 			$table->string('slug')->unique();

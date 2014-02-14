@@ -32,12 +32,12 @@ class Testimonial extends \Eloquent {
 	);
 
 	/**
-	 * Used to store the old main image value, set during model updating event before the model is actually updated
-	 * Used to compare with the new main image value after saving the model, so we can work out whether we need to
+	 * Used to store the old image value, set during model updating event before the model is actually updated
+	 * Used to compare with the new image value after saving the model, so we can work out whether we need to
 	 * recalculate the image width and height
 	 * @var string
 	 */
-	protected $oldMainImage = null;
+	protected $oldImage = null;
 
 	/**
 	 *
@@ -49,42 +49,42 @@ class Testimonial extends \Eloquent {
 		static::created(function($testimonial)
 		{
 			// If the record is being created and there is a "main image" supplied, set it's width and height
-			if (!empty($testimonial->main_image))
+			if (!empty($testimonial->image))
 			{
-				$testimonial->updateMainImageSize();
+				$testimonial->updateImageSize();
 			}
 		});
 
 		static::updating(function($testimonial)
 		{
-			// If the record is about to be updated and there is a "main image" supplied, get the current main image
+			// If the record is about to be updated and there is an "image" supplied, get the current image
 			// value so we can compare it to the new one
-			$testimonial->oldMainImage = self::where('id','=',$testimonial->id)->first()->pluck('main_image');
+			$testimonial->oldImage = self::where('id','=',$testimonial->id)->first()->pluck('image');
 			return true;
 		});
 
 		static::updated(function($testimonial)
 		{
-			// If the main image has changed, and the save was successful, update the database with the new width and height
-			if (isset($testimonial->oldMainImage) && $testimonial->oldMainImage <> $testimonial->main_image)
+			// If the image has changed, and the save was successful, update the database with the new width and height
+			if (isset($testimonial->oldImage) && $testimonial->oldImage <> $testimonial->image)
 			{
-				$testimonial->updateMainImageSize();
+				$testimonial->updateImageSize();
 			}
 		});
 
 	}
 
 	/**
-	 * Triggered from madel save events, it updates the main image width and height fields to the values of the
+	 * Triggered from madel save events, it updates the image width and height fields to the values of the
 	 * uploaded image.
 	 */
-	protected function updateMainImageSize()
+	protected function updateImageSize()
 	{
 		// Get path to main image
-		$pathToMainImage = public_path() . \Config::get('laravel-testimonials::main_image_resized_dir') . $this->main_image;
-		if (is_file($pathToMainImage) && file_exists($pathToMainImage))
+		$pathToImage = public_path() . self::getImageConfig('resized', 'dir') . $this->image;
+		if (is_file($pathToImage) && file_exists($pathToImage))
 		{
-			list($width, $height) = getimagesize($pathToMainImage);
+			list($width, $height) = getimagesize($pathToImage);
 		}
 		else
 		{
@@ -94,8 +94,8 @@ class Testimonial extends \Eloquent {
 		\DB::table($this->getTable())
 			->where('id', $this->id)
 			->update(array(
-				'main_image_width' => $width,
-				'main_image_height' => $height,
+				'image_width' => $width,
+				'image_height' => $height,
 			));
 	}
 
@@ -115,6 +115,67 @@ class Testimonial extends \Eloquent {
 	public function getUrl()
 	{
 		return \URL::action('Fbf\LaravelTestimonials\TestimonialsController@view', array('slug' => $this->slug));
+	}
+
+	/**
+	 * Returns the config setting for the image
+	 *
+	 * @param $size
+	 * @param $property
+	 * @return mixed
+	 */
+	public static function getImageConfig($size, $property)
+	{
+		$config = 'laravel-testimonials::image.';
+		if ($size == 'original')
+		{
+			$config .= 'original.';
+		}
+		elseif (!is_null($size))
+		{
+			$config .= 'sizes.' . $size . '.';
+		}
+		$config .= $property;
+		return \Config::get($config);
+	}
+
+	/**
+	 * Returns the HTML img tag for the requested image size for this testimonial
+	 *
+	 * @param $size
+	 * @return null|string
+	 */
+	public function getImage($size)
+	{
+		if (empty($this->image))
+		{
+			return null;
+		}
+		if ($size == 'resized')
+		{
+			$width = $this->image_width;
+			$height = $this->image_height;
+		}
+		elseif ($size == 'thumbnail')
+		{
+			$width = self::getImageConfig($size, 'width');
+			$height = self::getImageConfig($size, 'height');
+		}
+		$html = '<img src="' . self::getImageConfig($size, 'dir') . $this->image . '"';
+		$html .= ' alt="' . $this->image_alt . '"';
+		$html .= ' width="' . $width . '"';
+		$html .= ' height="' . $height . '" />';
+		return $html;
+	}
+
+	public function getYouTubeThumbnailImage()
+	{
+		return str_replace('%YOU_TUBE_VIDEO_ID%', $this->you_tube_video_id, \Config::get('laravel-testimonials::you_tube.thumbnail_code'));
+	}
+
+	public function getYouTubeEmbedCode()
+	{
+		return str_replace('%YOU_TUBE_VIDEO_ID%', $this->you_tube_video_id, \Config::get('laravel-testimonials::you_tube.embed_code'));
 	}
 
 }

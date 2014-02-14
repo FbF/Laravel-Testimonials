@@ -6,16 +6,11 @@
 
 	@if ( !empty( $testimonial->you_tube_video_id ) )
 		<div class="testimonial-youtube-video">
-			{{
-			str_replace('%YOU_TUBE_VIDEO_ID%', $testimonial->you_tube_video_id,
-			Config::get('laravel-testimonials::you_tube_embed_code'))
-			}}
+			{{ $testimonial->getYouTubeEmbedCode() }}
 		</div>
-	@elseif ( !empty( $testimonial->main_image ) )
-		<div class="main-image">
-			<img src="{{ Config::get('laravel-testimonials::main_image_resized_dir') }}{{ $testimonial->main_image }}"
-			     alt="{{ $testimonial->main_image_alt }}" width="{{ $testimonial->main_image_width }}"
-			     height="{{ $testimonial->main_image_height }}" />
+	@elseif ( !empty( $testimonial->image ) )
+		<div class="image">
+			{{ $testimonial->getImage('resized') }}
 		</div>
 	@endif
 	
@@ -25,6 +20,14 @@
 
 	<div class="testimonial-source">
 		<p>{{ $testimonial->source }}</p>
+	</div>
+
+	<div>
+		<p>
+			<a href="{{ action('Fbf\LaravelTestimonials\TestimonialsController@index') }}">
+				Back
+			</a>
+		</p>
 	</div>
 
 	@if (Config::get('laravel-testimonials::show_adjacent_testimonials_on_view') && ($newer || $older))
