@@ -43,6 +43,11 @@ return array(
 	'view_view' => 'laravel-testimonials::view',
 
 	/**
+	 * How many results per page on the index view
+	 */
+	'results_per_page' => 10,
+
+	/**
 	 * Determines whether to show adjacent (i.e. previous and next) testimonials links on the testimonial view page
 	 *
 	 * @type bool

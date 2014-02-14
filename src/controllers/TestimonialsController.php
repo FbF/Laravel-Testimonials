@@ -7,7 +7,7 @@ class TestimonialsController extends \BaseController {
 		$testimonials = Testimonial::where('status','=',Testimonial::APPROVED)
 			->where('published_date','<=',\Carbon\Carbon::now())
 			->orderBy('published_date', 'asc')
-			->paginate();
+			->paginate(\Config::get('laravel-testimonials::results_per_page'));
 
 		return \View::make(\Config::get('laravel-testimonials::index_view'))->with(compact('testimonials'));
 	}
